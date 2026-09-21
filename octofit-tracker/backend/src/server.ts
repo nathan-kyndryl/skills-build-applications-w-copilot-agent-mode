@@ -95,60 +95,31 @@ app.get('/api/config', (_request, response) => {
   });
 });
 
-app.get('/api/users', async (_request, response) => {
-  const data = await getCollection(User, fallbackUsers);
-  response.json({ data, count: data.length });
-});
+const registerCollectionRoutes = (
+  resource: string,
+  model: any,
+  fallback: Array<Record<string, unknown>>
+) => {
+  const routePath = `/api/${resource}`;
+  const slashRoutePath = `${routePath}/`;
 
-app.post('/api/users', async (request, response) => {
-  const payload = request.body ?? {};
-  const createdItem = await createCollectionItem(User, 'user', payload, fallbackUsers);
-  response.status(201).json({ message: 'user created', data: createdItem });
-});
+  app.get([routePath, slashRoutePath], async (_request, response) => {
+    const data = await getCollection(model, fallback);
+    response.json(data);
+  });
 
-app.get('/api/teams', async (_request, response) => {
-  const data = await getCollection(Team, fallbackTeams);
-  response.json({ data, count: data.length });
-});
+  app.post([routePath, slashRoutePath], async (request, response) => {
+    const payload = request.body ?? {};
+    const createdItem = await createCollectionItem(model, resource.replace(/s$/, ''), payload as Record<string, unknown>, fallback);
+    response.status(201).json({ message: `${resource.replace(/s$/, '')} created`, data: createdItem });
+  });
+};
 
-app.post('/api/teams', async (request, response) => {
-  const payload = request.body ?? {};
-  const createdItem = await createCollectionItem(Team, 'team', payload, fallbackTeams);
-  response.status(201).json({ message: 'team created', data: createdItem });
-});
-
-app.get('/api/activities', async (_request, response) => {
-  const data = await getCollection(Activity, fallbackActivities);
-  response.json({ data, count: data.length });
-});
-
-app.post('/api/activities', async (request, response) => {
-  const payload = request.body ?? {};
-  const createdItem = await createCollectionItem(Activity, 'activity', payload, fallbackActivities);
-  response.status(201).json({ message: 'activity created', data: createdItem });
-});
-
-app.get('/api/leaderboard', async (_request, response) => {
-  const data = await getCollection(LeaderboardEntry, fallbackLeaderboard);
-  response.json({ data, count: data.length });
-});
-
-app.post('/api/leaderboard', async (request, response) => {
-  const payload = request.body ?? {};
-  const createdItem = await createCollectionItem(LeaderboardEntry, 'leaderboard', payload, fallbackLeaderboard);
-  response.status(201).json({ message: 'leaderboard created', data: createdItem });
-});
-
-app.get('/api/workouts', async (_request, response) => {
-  const data = await getCollection(Workout, fallbackWorkouts);
-  response.json({ data, count: data.length });
-});
-
-app.post('/api/workouts', async (request, response) => {
-  const payload = request.body ?? {};
-  const createdItem = await createCollectionItem(Workout, 'workout', payload, fallbackWorkouts);
-  response.status(201).json({ message: 'workout created', data: createdItem });
-});
+registerCollectionRoutes('users', User, fallbackUsers);
+registerCollectionRoutes('teams', Team, fallbackTeams);
+registerCollectionRoutes('activities', Activity, fallbackActivities);
+registerCollectionRoutes('leaderboard', LeaderboardEntry, fallbackLeaderboard);
+registerCollectionRoutes('workouts', Workout, fallbackWorkouts);
 
 app.listen(port, () => {
   console.log(`OctoFit API listening on port ${port}`);
