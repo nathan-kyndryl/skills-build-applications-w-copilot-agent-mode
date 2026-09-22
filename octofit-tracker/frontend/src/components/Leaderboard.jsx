@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection } from '../App.jsx'
+import { fetchCollection, getApiBaseUrl } from '../App.jsx'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+const leaderboardApiUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
+  : `${getApiBaseUrl()}/api/leaderboard/`
 
 function Leaderboard() {
   const [entries, setEntries] = useState([])
@@ -9,7 +14,7 @@ function Leaderboard() {
   useEffect(() => {
     const loadLeaderboard = async () => {
       try {
-        const data = await fetchCollection('leaderboard')
+        const data = await fetchCollection('leaderboard', leaderboardApiUrl)
         setEntries(data)
       } catch (loadError) {
         setError(loadError.message)

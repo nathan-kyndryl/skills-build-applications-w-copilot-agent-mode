@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { fetchCollection } from '../App.jsx'
+import { fetchCollection, getApiBaseUrl } from '../App.jsx'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+const usersApiUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api/users/`
+  : `${getApiBaseUrl()}/api/users/`
 
 function Users() {
   const [users, setUsers] = useState([])
@@ -9,7 +14,7 @@ function Users() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const data = await fetchCollection('users')
+        const data = await fetchCollection('users', usersApiUrl)
         setUsers(data)
       } catch (loadError) {
         setError(loadError.message)

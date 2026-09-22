@@ -43,8 +43,8 @@ export function normalizeRecords(payload) {
   return []
 }
 
-export async function fetchCollection(resource) {
-  const response = await fetch(buildApiUrl(resource))
+export async function fetchCollection(resource, apiUrl = buildApiUrl(resource)) {
+  const response = await fetch(apiUrl)
 
   if (!response.ok) {
     throw new Error(`Request failed for ${resource}: ${response.status}`)
