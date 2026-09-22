@@ -28,16 +28,16 @@ export function normalizeRecords(payload) {
     return payload
   }
 
-  if (payload && Array.isArray(payload.data)) {
-    return payload.data
-  }
+  if (payload && typeof payload === 'object') {
+    const collection = payload.data ?? payload.results ?? payload.items
 
-  if (payload && Array.isArray(payload.results)) {
-    return payload.results
-  }
+    if (Array.isArray(collection)) {
+      return collection
+    }
 
-  if (payload && Array.isArray(payload.items)) {
-    return payload.items
+    if (collection && typeof collection === 'object') {
+      return normalizeRecords(collection)
+    }
   }
 
   return []

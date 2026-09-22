@@ -36,7 +36,7 @@ function Users() {
       ) : null}
 
       {loading ? (
-        <div className="alert alert-light">Loading users...</div>
+        <div className="alert alert-light" role="status">Loading users...</div>
       ) : (
         <div className="table-wrap">
           <table className="table table-striped align-middle">
@@ -50,7 +50,7 @@ function Users() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {users.length ? users.map((user) => (
                 <tr key={user.id ?? user.email ?? user.name}>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
@@ -62,7 +62,9 @@ function Users() {
                     </span>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan="5">No users found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>

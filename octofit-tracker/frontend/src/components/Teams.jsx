@@ -34,7 +34,7 @@ function Teams() {
       {error ? <div className="alert alert-danger">{error}</div> : null}
 
       {loading ? (
-        <div className="alert alert-light">Loading teams...</div>
+        <div className="alert alert-light" role="status">Loading teams...</div>
       ) : (
         <div className="table-wrap">
           <table className="table table-striped align-middle">
@@ -47,14 +47,16 @@ function Teams() {
               </tr>
             </thead>
             <tbody>
-              {teams.map((team) => (
+              {teams.length ? teams.map((team) => (
                 <tr key={team.id ?? team.name}>
                   <td>{team.name}</td>
                   <td><span className="badge">{team.focus}</span></td>
                   <td>{team.members}</td>
                   <td>{team.description ?? 'Training group'}</td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan="4">No teams found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>

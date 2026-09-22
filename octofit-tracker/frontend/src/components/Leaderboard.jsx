@@ -34,7 +34,7 @@ function Leaderboard() {
       {error ? <div className="alert alert-danger">{error}</div> : null}
 
       {loading ? (
-        <div className="alert alert-light">Loading leaderboard...</div>
+        <div className="alert alert-light" role="status">Loading leaderboard...</div>
       ) : (
         <div className="table-wrap">
           <table className="table table-striped align-middle">
@@ -46,13 +46,15 @@ function Leaderboard() {
               </tr>
             </thead>
             <tbody>
-              {entries.map((entry) => (
+              {entries.length ? entries.map((entry) => (
                 <tr key={entry.id ?? entry.user ?? entry.rank}>
                   <td>#{entry.rank}</td>
                   <td>{entry.user}</td>
                   <td>{entry.points}</td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan="3">No leaderboard entries found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>

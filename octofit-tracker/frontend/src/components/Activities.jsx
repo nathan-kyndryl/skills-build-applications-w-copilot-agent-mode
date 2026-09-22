@@ -34,7 +34,7 @@ function Activities() {
       {error ? <div className="alert alert-danger">{error}</div> : null}
 
       {loading ? (
-        <div className="alert alert-light">Loading activities...</div>
+        <div className="alert alert-light" role="status">Loading activities...</div>
       ) : (
         <div className="table-wrap">
           <table className="table table-striped align-middle">
@@ -47,14 +47,16 @@ function Activities() {
               </tr>
             </thead>
             <tbody>
-              {activities.map((activity) => (
+              {activities.length ? activities.map((activity) => (
                 <tr key={activity.id ?? `${activity.type}-${activity.date}`}>
                   <td>{activity.type}</td>
                   <td>{activity.duration} min</td>
                   <td>{activity.calories}</td>
-                  <td>{new Date(activity.date).toLocaleDateString()}</td>
+                  <td>{activity.date ? new Date(activity.date).toLocaleDateString() : 'N/A'}</td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan="4">No activities found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>

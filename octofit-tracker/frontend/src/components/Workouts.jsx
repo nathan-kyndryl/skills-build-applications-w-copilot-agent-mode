@@ -34,7 +34,7 @@ function Workouts() {
       {error ? <div className="alert alert-danger">{error}</div> : null}
 
       {loading ? (
-        <div className="alert alert-light">Loading workouts...</div>
+        <div className="alert alert-light" role="status">Loading workouts...</div>
       ) : (
         <div className="table-wrap">
           <table className="table table-striped align-middle">
@@ -47,14 +47,16 @@ function Workouts() {
               </tr>
             </thead>
             <tbody>
-              {workouts.map((workout) => (
+              {workouts.length ? workouts.map((workout) => (
                 <tr key={workout.id ?? workout.title}>
                   <td>{workout.title}</td>
                   <td><span className="badge">{workout.difficulty}</span></td>
                   <td>{workout.duration} min</td>
                   <td>{workout.focus ?? 'General'}</td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan="4">No workouts found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>

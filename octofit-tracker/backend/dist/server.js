@@ -4,6 +4,16 @@ import './config/database.js';
 import { Activity, LeaderboardEntry, Team, User, Workout } from './models/index.js';
 const app = express();
 const port = Number(process.env.PORT ?? 8000);
+app.use((request, response, next) => {
+    response.header('Access-Control-Allow-Origin', request.headers.origin ?? '*');
+    response.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    response.header('Access-Control-Allow-Headers', 'Content-Type');
+    if (request.method === 'OPTIONS') {
+        response.sendStatus(204);
+        return;
+    }
+    next();
+});
 const getApiBaseUrl = () => {
     const codespaceName = process.env.CODESPACE_NAME;
     return codespaceName ? `https://${codespaceName}-8000.app.github.dev` : 'http://localhost:8000';
@@ -58,6 +68,13 @@ const fallbackWorkouts = [
     { id: 'workout-3', title: 'Sprint Ladder', difficulty: 'Intermediate', duration: 25 }
 ];
 app.use(express.json());
+app.get('/', (_request, response) => {
+    response.json({
+        service: 'octofit-tracker-api',
+        status: 'ok',
+        apiBasePath: '/api'
+    });
+});
 app.get('/api/health', (_request, response) => {
     response.json({
         status: 'ok',
